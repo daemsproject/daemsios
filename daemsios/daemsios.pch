@@ -1,0 +1,11 @@
+//
+//  daemsios.pch
+//  daemsios
+//
+//  Created by Chance on 2017/4/1.
+//  Copyright © 2017年 Chance. All rights reserved.
+//
+
+#ifdef __OBJC__
+#import <Foundation/Foundation.h>
+#endif
