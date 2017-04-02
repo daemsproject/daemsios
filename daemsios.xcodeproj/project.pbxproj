@@ -234,6 +234,19 @@
 		C53848A31E8FE0C90056A33D /* x509.h in Headers */ = {isa = PBXBuildFile; fileRef = C53848581E8FE0C90056A33D /* x509.h */; };
 		C53848A41E8FE0C90056A33D /* x509_vfy.h in Headers */ = {isa = PBXBuildFile; fileRef = C53848591E8FE0C90056A33D /* x509_vfy.h */; };
 		C53848A51E8FE0C90056A33D /* x509v3.h in Headers */ = {isa = PBXBuildFile; fileRef = C538485A1E8FE0C90056A33D /* x509v3.h */; };
+		C5AF34091E90F5DB005F3FC1 /* DMCPeer.h in Headers */ = {isa = PBXBuildFile; fileRef = C5AF34051E90F5DB005F3FC1 /* DMCPeer.h */; };
+		C5AF340A1E90F5DB005F3FC1 /* DMCPeer.m in Sources */ = {isa = PBXBuildFile; fileRef = C5AF34061E90F5DB005F3FC1 /* DMCPeer.m */; };
+		C5AF340B1E90F5DB005F3FC1 /* Reachability.h in Headers */ = {isa = PBXBuildFile; fileRef = C5AF34071E90F5DB005F3FC1 /* Reachability.h */; };
+		C5AF340C1E90F5DB005F3FC1 /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = C5AF34081E90F5DB005F3FC1 /* Reachability.m */; };
+		C5AF340E1E90F5EB005F3FC1 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C5AF340D1E90F5EB005F3FC1 /* SystemConfiguration.framework */; };
+		C5AF34151E90F7F5005F3FC1 /* NSData+DaemsCoin.h in Headers */ = {isa = PBXBuildFile; fileRef = C5AF340F1E90F7F5005F3FC1 /* NSData+DaemsCoin.h */; };
+		C5AF34161E90F7F5005F3FC1 /* NSData+DaemsCoin.m in Sources */ = {isa = PBXBuildFile; fileRef = C5AF34101E90F7F5005F3FC1 /* NSData+DaemsCoin.m */; };
+		C5AF34171E90F7F5005F3FC1 /* NSManagedObject+Sugar.h in Headers */ = {isa = PBXBuildFile; fileRef = C5AF34111E90F7F5005F3FC1 /* NSManagedObject+Sugar.h */; };
+		C5AF34181E90F7F5005F3FC1 /* NSManagedObject+Sugar.m in Sources */ = {isa = PBXBuildFile; fileRef = C5AF34121E90F7F5005F3FC1 /* NSManagedObject+Sugar.m */; };
+		C5AF34191E90F7F5005F3FC1 /* NSMutableData+DaemsCoin.h in Headers */ = {isa = PBXBuildFile; fileRef = C5AF34131E90F7F5005F3FC1 /* NSMutableData+DaemsCoin.h */; };
+		C5AF341A1E90F7F5005F3FC1 /* NSMutableData+DaemsCoin.m in Sources */ = {isa = PBXBuildFile; fileRef = C5AF34141E90F7F5005F3FC1 /* NSMutableData+DaemsCoin.m */; };
+		C5AF341D1E90F846005F3FC1 /* NSString+DaemsCoin.h in Headers */ = {isa = PBXBuildFile; fileRef = C5AF341B1E90F846005F3FC1 /* NSString+DaemsCoin.h */; };
+		C5AF341E1E90F846005F3FC1 /* NSString+DaemsCoin.m in Sources */ = {isa = PBXBuildFile; fileRef = C5AF341C1E90F846005F3FC1 /* NSString+DaemsCoin.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -478,6 +491,19 @@
 		C53848581E8FE0C90056A33D /* x509.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = x509.h; sourceTree = "<group>"; };
 		C53848591E8FE0C90056A33D /* x509_vfy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = x509_vfy.h; sourceTree = "<group>"; };
 		C538485A1E8FE0C90056A33D /* x509v3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = x509v3.h; sourceTree = "<group>"; };
+		C5AF34051E90F5DB005F3FC1 /* DMCPeer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = DMCPeer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		C5AF34061E90F5DB005F3FC1 /* DMCPeer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = DMCPeer.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		C5AF34071E90F5DB005F3FC1 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
+		C5AF34081E90F5DB005F3FC1 /* Reachability.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Reachability.m; sourceTree = "<group>"; };
+		C5AF340D1E90F5EB005F3FC1 /* SystemConfiguration.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SystemConfiguration.framework; path = System/Library/Frameworks/SystemConfiguration.framework; sourceTree = SDKROOT; };
+		C5AF340F1E90F7F5005F3FC1 /* NSData+DaemsCoin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "NSData+DaemsCoin.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		C5AF34101E90F7F5005F3FC1 /* NSData+DaemsCoin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "NSData+DaemsCoin.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		C5AF34111E90F7F5005F3FC1 /* NSManagedObject+Sugar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSManagedObject+Sugar.h"; sourceTree = "<group>"; };
+		C5AF34121E90F7F5005F3FC1 /* NSManagedObject+Sugar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSManagedObject+Sugar.m"; sourceTree = "<group>"; };
+		C5AF34131E90F7F5005F3FC1 /* NSMutableData+DaemsCoin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "NSMutableData+DaemsCoin.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		C5AF34141E90F7F5005F3FC1 /* NSMutableData+DaemsCoin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "NSMutableData+DaemsCoin.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		C5AF341B1E90F846005F3FC1 /* NSString+DaemsCoin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = "NSString+DaemsCoin.h"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		C5AF341C1E90F846005F3FC1 /* NSString+DaemsCoin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = "NSString+DaemsCoin.m"; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -485,6 +511,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C5AF340E1E90F5EB005F3FC1 /* SystemConfiguration.framework in Frameworks */,
 				C538480E1E8FDF730056A33D /* Foundation.framework in Frameworks */,
 				C52F06DF1E8FCABF007E636A /* Security.framework in Frameworks */,
 				C538480A1E8FDE140056A33D /* libssl.a in Frameworks */,
@@ -546,6 +573,7 @@
 		C52F03CA1E8FC790007E636A /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				C5AF34041E90F5DB005F3FC1 /* network */,
 				C53116161E90DE4700E7511F /* core */,
 			);
 			path = Source;
@@ -597,6 +625,7 @@
 		C52F06DD1E8FCABF007E636A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				C5AF340D1E90F5EB005F3FC1 /* SystemConfiguration.framework */,
 				C538480D1E8FDF730056A33D /* Foundation.framework */,
 				C52F06DE1E8FCABF007E636A /* Security.framework */,
 			);
@@ -837,6 +866,25 @@
 			path = openssl;
 			sourceTree = "<group>";
 		};
+		C5AF34041E90F5DB005F3FC1 /* network */ = {
+			isa = PBXGroup;
+			children = (
+				C5AF341B1E90F846005F3FC1 /* NSString+DaemsCoin.h */,
+				C5AF341C1E90F846005F3FC1 /* NSString+DaemsCoin.m */,
+				C5AF340F1E90F7F5005F3FC1 /* NSData+DaemsCoin.h */,
+				C5AF34101E90F7F5005F3FC1 /* NSData+DaemsCoin.m */,
+				C5AF34111E90F7F5005F3FC1 /* NSManagedObject+Sugar.h */,
+				C5AF34121E90F7F5005F3FC1 /* NSManagedObject+Sugar.m */,
+				C5AF34131E90F7F5005F3FC1 /* NSMutableData+DaemsCoin.h */,
+				C5AF34141E90F7F5005F3FC1 /* NSMutableData+DaemsCoin.m */,
+				C5AF34051E90F5DB005F3FC1 /* DMCPeer.h */,
+				C5AF34061E90F5DB005F3FC1 /* DMCPeer.m */,
+				C5AF34071E90F5DB005F3FC1 /* Reachability.h */,
+				C5AF34081E90F5DB005F3FC1 /* Reachability.m */,
+			);
+			path = network;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -883,14 +931,17 @@
 				C538489B1E8FE0C90056A33D /* stack.h in Headers */,
 				C53848791E8FE0C90056A33D /* hmac.h in Headers */,
 				C538485C1E8FE0C90056A33D /* asn1.h in Headers */,
+				C5AF341D1E90F846005F3FC1 /* NSString+DaemsCoin.h in Headers */,
 				C53117211E90DE4700E7511F /* DMCScriptMachine.h in Headers */,
 				C53117051E90DE4700E7511F /* DMCPaymentMethod.h in Headers */,
 				C538485D1E8FE0C90056A33D /* asn1_mac.h in Headers */,
 				C53848941E8FE0C90056A33D /* sha.h in Headers */,
 				C53848911E8FE0C90056A33D /* rsa.h in Headers */,
 				C538486B1E8FE0C90056A33D /* des.h in Headers */,
+				C5AF34091E90F5DB005F3FC1 /* DMCPeer.h in Headers */,
 				C531170B1E90DE4700E7511F /* DMCPaymentProtocol.h in Headers */,
 				C53848881E8FE0C90056A33D /* pem.h in Headers */,
+				C5AF34151E90F7F5005F3FC1 /* NSData+DaemsCoin.h in Headers */,
 				C53116CB1E90DE4700E7511F /* DMCBlockchainInfo.h in Headers */,
 				C531172D1E90DE4700E7511F /* DMCTransactionInput.h in Headers */,
 				C531171B1E90DE4700E7511F /* DMCQRCode.h in Headers */,
@@ -902,9 +953,11 @@
 				C53116E71E90DE4700E7511F /* DMCFancyEncryptedMessage+Tests.h in Headers */,
 				C53116F31E90DE4700E7511F /* DMCKeychain.h in Headers */,
 				C538489E1E8FE0C90056A33D /* ts.h in Headers */,
+				C5AF34191E90F7F5005F3FC1 /* NSMutableData+DaemsCoin.h in Headers */,
 				C53848711E8FE0C90056A33D /* e_os2.h in Headers */,
 				C53117341E90DE4700E7511F /* NS+DMCBase58.h in Headers */,
 				C53116D91E90DE4700E7511F /* DMCData+Tests.h in Headers */,
+				C5AF34171E90F7F5005F3FC1 /* NSManagedObject+Sugar.h in Headers */,
 				C53116F51E90DE4700E7511F /* DMCMerkleTree+Tests.h in Headers */,
 				C53117191E90DE4700E7511F /* DMCProtocolSerialization.h in Headers */,
 				C53848821E8FE0C90056A33D /* obj_mac.h in Headers */,
@@ -926,6 +979,7 @@
 				C53117011E90DE4700E7511F /* DMCOpcode.h in Headers */,
 				C538489C1E8FE0C90056A33D /* symhacks.h in Headers */,
 				C538485B1E8FE0C90056A33D /* aes.h in Headers */,
+				C5AF340B1E90F5DB005F3FC1 /* Reachability.h in Headers */,
 				C53848861E8FE0C90056A33D /* opensslv.h in Headers */,
 				C538487A1E8FE0C90056A33D /* idea.h in Headers */,
 				C53848921E8FE0C90056A33D /* safestack.h in Headers */,
@@ -1106,6 +1160,7 @@
 				C53116CE1E90DE4700E7511F /* DMCBlockHeader.m in Sources */,
 				C53116C61E90DE4700E7511F /* DMCBlindSignature.m in Sources */,
 				C53117301E90DE4700E7511F /* DMCTransactionOutput.m in Sources */,
+				C5AF340A1E90F5DB005F3FC1 /* DMCPeer.m in Sources */,
 				C53117181E90DE4700E7511F /* DMCProtocolSerialization+Tests.m in Sources */,
 				C53117141E90DE4700E7511F /* DMCProcessor.m in Sources */,
 				C531170E1E90DE4700E7511F /* DMCPaymentRequest.m in Sources */,
@@ -1117,6 +1172,7 @@
 				C53116B21E90DE4700E7511F /* DMCAssetAddress.m in Sources */,
 				C53116CC1E90DE4700E7511F /* DMCBlockchainInfo.m in Sources */,
 				C53117001E90DE4700E7511F /* DMCNumberFormatter.m in Sources */,
+				C5AF34181E90F7F5005F3FC1 /* NSManagedObject+Sugar.m in Sources */,
 				C53116D61E90DE4700E7511F /* DMCCurvePoint+Tests.m in Sources */,
 				C53116F61E90DE4700E7511F /* DMCMerkleTree+Tests.m in Sources */,
 				C531171C1E90DE4700E7511F /* DMCQRCode.m in Sources */,
@@ -1137,6 +1193,7 @@
 				C53116F81E90DE4700E7511F /* DMCMerkleTree.m in Sources */,
 				C53117121E90DE4700E7511F /* DMCPriceSource.m in Sources */,
 				C53117251E90DE4700E7511F /* DMCSecretSharing.m in Sources */,
+				C5AF34161E90F7F5005F3FC1 /* NSData+DaemsCoin.m in Sources */,
 				C53117221E90DE4700E7511F /* DMCScriptMachine.m in Sources */,
 				C53116B81E90DE4700E7511F /* DMCBase58+Tests.m in Sources */,
 				C53116B41E90DE4700E7511F /* DMCAssetID.m in Sources */,
@@ -1144,8 +1201,10 @@
 				C53116DE1E90DE4700E7511F /* DMCEncryptedBackup+Tests.m in Sources */,
 				C53116EA1E90DE4700E7511F /* DMCFancyEncryptedMessage.m in Sources */,
 				C53116E41E90DE4700E7511F /* DMCEncryptedMessage.m in Sources */,
+				C5AF340C1E90F5DB005F3FC1 /* Reachability.m in Sources */,
 				C531170C1E90DE4700E7511F /* DMCPaymentProtocol.m in Sources */,
 				C53116C41E90DE4700E7511F /* DMCBlindSignature+Tests.m in Sources */,
+				C5AF341E1E90F846005F3FC1 /* NSString+DaemsCoin.m in Sources */,
 				C53117161E90DE4700E7511F /* DMCProtocolBuffers.m in Sources */,
 				C53116C01E90DE4700E7511F /* DMCDaemsCoinURL+Tests.m in Sources */,
 				C53116DC1E90DE4700E7511F /* DMCData.m in Sources */,
@@ -1157,6 +1216,7 @@
 				C53116EC1E90DE4700E7511F /* DMCHashID.m in Sources */,
 				C53116BA1E90DE4700E7511F /* DMCBase58.m in Sources */,
 				C53116AF1E90DE4700E7511F /* DMCAddress.m in Sources */,
+				C5AF341A1E90F7F5005F3FC1 /* NSMutableData+DaemsCoin.m in Sources */,
 				C53117061E90DE4700E7511F /* DMCPaymentMethod.m in Sources */,
 				C53116D01E90DE4700E7511F /* DMCChainCom.m in Sources */,
 				C531170A1E90DE4700E7511F /* DMCPaymentMethodRequest.m in Sources */,
