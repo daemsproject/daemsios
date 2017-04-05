@@ -234,6 +234,8 @@
 		C53848A31E8FE0C90056A33D /* x509.h in Headers */ = {isa = PBXBuildFile; fileRef = C53848581E8FE0C90056A33D /* x509.h */; };
 		C53848A41E8FE0C90056A33D /* x509_vfy.h in Headers */ = {isa = PBXBuildFile; fileRef = C53848591E8FE0C90056A33D /* x509_vfy.h */; };
 		C53848A51E8FE0C90056A33D /* x509v3.h in Headers */ = {isa = PBXBuildFile; fileRef = C538485A1E8FE0C90056A33D /* x509v3.h */; };
+		C585DF2A1E951EE800CE430D /* DMCMessageHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = C585DF281E951EE800CE430D /* DMCMessageHandler.h */; };
+		C585DF2B1E951EE800CE430D /* DMCMessageHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = C585DF291E951EE800CE430D /* DMCMessageHandler.m */; };
 		C5AF34091E90F5DB005F3FC1 /* DMCPeer.h in Headers */ = {isa = PBXBuildFile; fileRef = C5AF34051E90F5DB005F3FC1 /* DMCPeer.h */; };
 		C5AF340A1E90F5DB005F3FC1 /* DMCPeer.m in Sources */ = {isa = PBXBuildFile; fileRef = C5AF34061E90F5DB005F3FC1 /* DMCPeer.m */; };
 		C5AF340B1E90F5DB005F3FC1 /* Reachability.h in Headers */ = {isa = PBXBuildFile; fileRef = C5AF34071E90F5DB005F3FC1 /* Reachability.h */; };
@@ -491,6 +493,8 @@
 		C53848581E8FE0C90056A33D /* x509.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = x509.h; sourceTree = "<group>"; };
 		C53848591E8FE0C90056A33D /* x509_vfy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = x509_vfy.h; sourceTree = "<group>"; };
 		C538485A1E8FE0C90056A33D /* x509v3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = x509v3.h; sourceTree = "<group>"; };
+		C585DF281E951EE800CE430D /* DMCMessageHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMCMessageHandler.h; sourceTree = "<group>"; };
+		C585DF291E951EE800CE430D /* DMCMessageHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMCMessageHandler.m; sourceTree = "<group>"; };
 		C5AF34051E90F5DB005F3FC1 /* DMCPeer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; path = DMCPeer.h; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
 		C5AF34061E90F5DB005F3FC1 /* DMCPeer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; path = DMCPeer.m; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		C5AF34071E90F5DB005F3FC1 /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Reachability.h; sourceTree = "<group>"; };
@@ -881,6 +885,8 @@
 				C5AF34061E90F5DB005F3FC1 /* DMCPeer.m */,
 				C5AF34071E90F5DB005F3FC1 /* Reachability.h */,
 				C5AF34081E90F5DB005F3FC1 /* Reachability.m */,
+				C585DF281E951EE800CE430D /* DMCMessageHandler.h */,
+				C585DF291E951EE800CE430D /* DMCMessageHandler.m */,
 			);
 			path = network;
 			sourceTree = "<group>";
@@ -1017,6 +1023,7 @@
 				C53117241E90DE4700E7511F /* DMCSecretSharing.h in Headers */,
 				C53117131E90DE4700E7511F /* DMCProcessor.h in Headers */,
 				C53848901E8FE0C90056A33D /* ripemd.h in Headers */,
+				C585DF2A1E951EE800CE430D /* DMCMessageHandler.h in Headers */,
 				C53116FD1E90DE4700E7511F /* DMCNetwork.h in Headers */,
 				C538486D1E8FE0C90056A33D /* dh.h in Headers */,
 				C538489D1E8FE0C90056A33D /* tls1.h in Headers */,
@@ -1152,6 +1159,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				C53117201E90DE4700E7511F /* DMCScript.m in Sources */,
+				C585DF2B1E951EE800CE430D /* DMCMessageHandler.m in Sources */,
 				C53116EE1E90DE4700E7511F /* DMCKey+Tests.m in Sources */,
 				C53117371E90DE4700E7511F /* NSData+DMCData.m in Sources */,
 				C531172C1E90DE4700E7511F /* DMCTransactionBuilder.m in Sources */,

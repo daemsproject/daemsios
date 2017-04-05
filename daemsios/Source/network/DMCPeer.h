@@ -4,20 +4,21 @@
 #import <Foundation/Foundation.h>
 
 
-#if BITCOIN_TESTNET
-#define BITCOIN_STANDARD_PORT 18333
+#if DAEMSCOIN_TESTNET
+#define DAEMSCOIN_STANDARD_PORT 18333
 #else
-#define BITCOIN_STANDARD_PORT 8333
+#define DAEMSCOIN_STANDARD_PORT 8333
 #endif
 
-#define BITCOIN_TIMEOUT_CODE  1001
+#define DAEMSCOIN_TIMEOUT_CODE  1001
 
 #define SERVICES_NODE_NETWORK 0x01 // services value indicating a node carries full blocks, not just headers
 #define SERVICES_NODE_BLOOM   0x04 // BIP111: https://github.com/bitcoin/bips/blob/master/bip-0111.mediawiki
-#define USER_AGENT            [NSString stringWithFormat:@"/breadwallet:%@/",\
+#define USER_AGENT            [NSString stringWithFormat:@"/daems:%@/",\
                                NSBundle.mainBundle.infoDictionary[@"CFBundleShortVersionString"]]
 
-// explanation of message types at: https://en.bitcoin.it/wiki/Protocol_specification
+// 网络通信基础协议方法: https://en.bitcoin.it/wiki/Protocol_documentation
+// 巴比特的说明: http://www.8btc.com/protocol_specification
 #define MSG_VERSION     @"version"
 #define MSG_VERACK      @"verack"
 #define MSG_ADDR        @"addr"
@@ -26,7 +27,6 @@
 #define MSG_NOTFOUND    @"notfound"
 #define MSG_GETBLOCKS   @"getblocks"
 #define MSG_GETHEADERS  @"getheaders"
-#define MSG_TX          @"tx"
 #define MSG_BLOCK       @"block"
 #define MSG_HEADERS     @"headers"
 #define MSG_GETADDR     @"getaddr"
@@ -41,6 +41,24 @@
 #define MSG_REJECT      @"reject"      // BIP61: https://github.com/bitcoin/bips/blob/master/bip-0061.mediawiki
 #define MSG_SENDHEADERS @"sendheaders" // BIP130: https://github.com/bitcoin/bips/blob/master/bip-0130.mediawiki
 #define MSG_FEEFILTER   @"feefilter"   // BIP133: https://github.com/bitcoin/bips/blob/master/bip-0133.mediawiki
+/***** 新增daems协议 *****/
+#define MSG_GETBALANCEBYADDR        @"getbalancebyaddr"
+#define MSG_BALANCEBYADDR           @"balancebyaddr"
+#define MSG_GETTXIDSBYADDR          @"gettxidsbyaddr"
+#define MSG_TXIDSBYADDRESS          @"txidsbyaddress"
+#define MSG_GETTXS                  @"gettxs"
+#define MSG_TX4LIGHTNODE            @"tx4lightnode"
+#define MSG_GETAVAILABLECHEQUES     @"getavailablecheques"
+#define MSG_AVAILABLECHEQUES        @"availablecheques"
+#define MSG_TX                      @"tx"
+#define MSG_LAYER1TX                @"layer1tx"
+#define MSG_REGISTERADDR            @"registeraddr"
+#define MSG_REGISTERED              @"registered"
+#define MSG_GETNODEADDRESSES        @"getnodeaddresses"
+#define MSG_NODEADDRESSES           @"nodeaddresses"
+#define MSG_FALLBACK                @"fallback"
+#define MSG_DISABLECHEQUE           @"disablecheque"
+
 
 #define REJECT_INVALID     0x10 // transaction is invalid for some reason (invalid signature, output value > input, etc)
 #define REJECT_SPENT       0x12 // an input is already spent
@@ -72,6 +90,7 @@ typedef union _UInt128 UInt128;
 
 @end
 
+//连接状态枚举
 typedef enum : NSInteger {
     DMCPeerStatusDisconnected = 0,
     DMCPeerStatusConnecting,
@@ -105,17 +124,75 @@ typedef enum : NSInteger {
 @property (nonatomic, assign) uint32_t currentBlockHeight; // set this to local block height (helps detect tarpit nodes)
 @property (nonatomic, assign) BOOL synced; // use this to keep track of peer state
 
+
+/**
+ 以IP地址和端口初始化一个节点
+
+ @param address IP地址
+ @param port 端口
+ @return 实例
+ */
 + (instancetype)peerWithAddress:(UInt128)address andPort:(uint16_t)port;
 
+
+/**
+ 以IP地址和端口初始化一个节点
+ */
 - (instancetype)initWithAddress:(UInt128)address andPort:(uint16_t)port;
-- (instancetype)initWithAddress:(UInt128)address port:(uint16_t)port timestamp:(NSTimeInterval)timestamp
-services:(uint64_t)services;
+
+
+/**
+ 以IP地址和端口初始化一个节点
+
+ @param address IP地址
+ @param port 端口
+ @param timestamp 时间(version >= 31402)
+ @param services 该连接允许的特性
+ @return ——
+ */
+- (instancetype)initWithAddress:(UInt128)address port:(uint16_t)port timestamp:(NSTimeInterval)timestamp services:(uint64_t)services;
+
+
+/**
+ 设置委托
+
+ @param delegate 委托对象
+ @param delegateQueue 线程队列
+ */
 - (void)setDelegate:(id<DMCPeerDelegate>)delegate queue:(dispatch_queue_t)delegateQueue;
+
+
+/**
+ 建立链接
+ */
 - (void)connect;
+
+
+/**
+ 断开链接
+ */
 - (void)disconnect;
+
+
+/**
+ 发送消息
+
+ @param message 消息主体payload
+ @param type 类型
+ */
 - (void)sendMessage:(NSData *)message type:(NSString *)type;
+
+
+/**
+ filterload, filteradd, filterclear, merkleblock的数据发送
+ bip-0037解析 https://github.com/bitcoin/bips/blob/master/bip-0037.mediawiki
+ @param filter ——
+ */
 - (void)sendFilterloadMessage:(NSData *)filter;
+
+
 - (void)sendMempoolMessage:(NSArray *)publishedTxHashes completion:(void (^)(BOOL success))completion;
+
 - (void)sendGetheadersMessageWithLocators:(NSArray *)locators andHashStop:(UInt256)hashStop;
 - (void)sendGetblocksMessageWithLocators:(NSArray *)locators andHashStop:(UInt256)hashStop;
 - (void)sendInvMessageWithTxHashes:(NSArray *)txHashes;

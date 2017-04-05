@@ -1,27 +1,5 @@
 //
 //  NSString+DaemsCoin.m
-//  BreadWallet
-//
-//  Created by Aaron Voisine on 5/13/13.
-//  Copyright (c) 2013 Aaron Voisine <voisine@gmail.com>
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
 
 #import "NSString+DaemsCoin.h"
 #import "NSData+DaemsCoin.h"
@@ -105,10 +83,10 @@ static const UniChar base58chars[] = {
     NSArray *elem = [script scriptElements];
     NSUInteger l = elem.count;
     NSMutableData *d = [NSMutableData data];
-    uint8_t v = BITCOIN_PUBKEY_ADDRESS;
+    uint8_t v = DAEMSCOIN_PUBKEY_ADDRESS;
 
-#if BITCOIN_TESTNET
-    v = BITCOIN_PUBKEY_ADDRESS_TEST;
+#if DAEMSCOIN_TESTNET
+    v = DAEMSCOIN_PUBKEY_ADDRESS_TEST;
 #endif
 
     if (l == 5 && [elem[0] intValue] == OP_DUP && [elem[1] intValue] == OP_HASH160 && [elem[2] intValue] == 20 &&
@@ -119,9 +97,9 @@ static const UniChar base58chars[] = {
     }
     else if (l == 3 && [elem[0] intValue] == OP_HASH160 && [elem[1] intValue] == 20 && [elem[2] intValue] == OP_EQUAL) {
         // pay-to-script-hash scriptPubKey
-        v = BITCOIN_SCRIPT_ADDRESS;
-#if BITCOIN_TESTNET
-        v = BITCOIN_SCRIPT_ADDRESS_TEST;
+        v = DAEMSCOIN_SCRIPT_ADDRESS;
+#if DAEMSCOIN_TESTNET
+        v = DAEMSCOIN_SCRIPT_ADDRESS_TEST;
 #endif
         [d appendBytes:&v length:1];
         [d appendData:elem[1]];
@@ -143,10 +121,10 @@ static const UniChar base58chars[] = {
     NSArray *elem = [script scriptElements];
     NSUInteger l = elem.count;
     NSMutableData *d = [NSMutableData data];
-    uint8_t v = BITCOIN_PUBKEY_ADDRESS;
+    uint8_t v = DAEMSCOIN_PUBKEY_ADDRESS;
 
-#if BITCOIN_TESTNET
-    v = BITCOIN_PUBKEY_ADDRESS_TEST;
+#if DAEMSCOIN_TESTNET
+    v = DAEMSCOIN_PUBKEY_ADDRESS_TEST;
 #endif
 
     if (l >= 2 && [elem[l - 2] intValue] <= OP_PUSHDATA4 && [elem[l - 2] intValue] > 0 &&
@@ -156,9 +134,9 @@ static const UniChar base58chars[] = {
     }
     else if (l >= 2 && [elem[l - 2] intValue] <= OP_PUSHDATA4 && [elem[l - 2] intValue] > 0 &&
              [elem[l - 1] intValue] <= OP_PUSHDATA4 && [elem[l - 1] intValue] > 0) { // pay-to-script-hash scriptSig
-        v = BITCOIN_SCRIPT_ADDRESS;
-#if BITCOIN_TESTNET
-        v = BITCOIN_SCRIPT_ADDRESS_TEST;
+        v = DAEMSCOIN_SCRIPT_ADDRESS;
+#if DAEMSCOIN_TESTNET
+        v = DAEMSCOIN_SCRIPT_ADDRESS_TEST;
 #endif
         [d appendBytes:&v length:1];
         [d appendBytes:[elem[l - 1] hash160].u8 length:sizeof(UInt160)];
@@ -306,11 +284,11 @@ static const UniChar base58chars[] = {
     
     uint8_t version = *(const uint8_t *)d.bytes;
         
-#if BITCOIN_TESTNET
-    return (version == BITCOIN_PUBKEY_ADDRESS_TEST || version == BITCOIN_SCRIPT_ADDRESS_TEST) ? YES : NO;
+#if DAEMSCOIN_TESTNET
+    return (version == DAEMSCOIN_PUBKEY_ADDRESS_TEST || version == DAEMSCOIN_SCRIPT_ADDRESS_TEST) ? YES : NO;
 #endif
 
-    return (version == BITCOIN_PUBKEY_ADDRESS || version == BITCOIN_SCRIPT_ADDRESS) ? YES : NO;
+    return (version == DAEMSCOIN_PUBKEY_ADDRESS || version == DAEMSCOIN_SCRIPT_ADDRESS) ? YES : NO;
 }
 
 - (BOOL)isValidDaemsCoinPrivateKey
@@ -318,10 +296,10 @@ static const UniChar base58chars[] = {
     NSData *d = self.base58checkToData;
     
     if (d.length == 33 || d.length == 34) { // wallet import format: https://en.bitcoin.it/wiki/Wallet_import_format
-#if BITCOIN_TESTNET
-        return (*(const uint8_t *)d.bytes == BITCOIN_PRIVKEY_TEST) ? YES : NO;
+#if DAEMSCOIN_TESTNET
+        return (*(const uint8_t *)d.bytes == DAEMSCOIN_PRIVKEY_TEST) ? YES : NO;
 #else
-        return (*(const uint8_t *)d.bytes == BITCOIN_PRIVKEY) ? YES : NO;
+        return (*(const uint8_t *)d.bytes == DAEMSCOIN_PRIVKEY) ? YES : NO;
 #endif
     }
     else if ((self.length == 30 || self.length == 22) && [self characterAtIndex:0] == 'S') { // mini private key format

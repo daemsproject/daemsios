@@ -1,27 +1,5 @@
 //
 //  NSMutableData+DaemsCoin.m
-//  BreadWallet
-//
-//  Created by Aaron Voisine on 5/20/13.
-//  Copyright (c) 2013 Aaron Voisine <voisine@gmail.com>
-//
-//  Permission is hereby granted, free of charge, to any person obtaining a copy
-//  of this software and associated documentation files (the "Software"), to deal
-//  in the Software without restriction, including without limitation the rights
-//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-//  copies of the Software, and to permit persons to whom the Software is
-//  furnished to do so, subject to the following conditions:
-//
-//  The above copyright notice and this permission notice shall be included in
-//  all copies or substantial portions of the Software.
-//
-//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-//  THE SOFTWARE.
 
 #import "NSMutableData+DaemsCoin.h"
 #import "NSData+DaemsCoin.h"
@@ -206,7 +184,7 @@ CFAllocatorRef SecureAllocator()
 
 - (void)appendScriptPubKeyForAddress:(NSString *)address
 {
-    static uint8_t pubkeyAddress = BITCOIN_PUBKEY_ADDRESS, scriptAddress = BITCOIN_SCRIPT_ADDRESS;
+    static uint8_t pubkeyAddress = DAEMSCOIN_PUBKEY_ADDRESS, scriptAddress = DAEMSCOIN_SCRIPT_ADDRESS;
     NSData *d = address.base58checkToData;
 
     if (d.length != 21) return;
@@ -214,9 +192,9 @@ CFAllocatorRef SecureAllocator()
     uint8_t version = *(const uint8_t *)d.bytes;
     NSData *hash = [d subdataWithRange:NSMakeRange(1, d.length - 1)];
 
-#if BITCOIN_TESTNET
-    pubkeyAddress = BITCOIN_PUBKEY_ADDRESS_TEST;
-    scriptAddress = BITCOIN_SCRIPT_ADDRESS_TEST;
+#if DAEMSCOIN_TESTNET
+    pubkeyAddress = DAEMSCOIN_PUBKEY_ADDRESS_TEST;
+    scriptAddress = DAEMSCOIN_SCRIPT_ADDRESS_TEST;
 #endif
 
     if (version == pubkeyAddress) {
@@ -235,9 +213,22 @@ CFAllocatorRef SecureAllocator()
 
 // MARK: - bitcoin protocol
 
+
+/**
+ 把消息主体封装成带协议的完整消息
+
+ 字节空间   描述      数据类型        说明
+ 4        magic     uint32_t	用于识别消息的来源网络，当流状态位置时，它还用于寻找下一条消息
+ 12     command     char[12]	识别包内容的ASCII字串，用NULL字符补满，(使用非NULL字符填充会被拒绝)
+ 4      checksum	uint32_t	sha256(sha256(payload)) 的前4个字节(不包含在version 或 verack 中)
+ 4      length      uint32_t	payload的字节数
+ ?      payload     uchar[]     实际数据
+ 
+ */
 - (void)appendMessage:(NSData *)message type:(NSString *)type;
 {
-    [self appendUInt32:BITCOIN_MAGIC_NUMBER];
+
+    [self appendUInt32:DAEMSCOIN_MAGIC_NUMBER];
     [self appendNullPaddedString:type length:12];
     [self appendUInt32:(uint32_t)message.length];
     [self appendBytes:message.SHA256_2.u32 length:4];

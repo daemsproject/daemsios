@@ -34,8 +34,11 @@ typedef enum : uint32_t {
 
 @property (nonatomic, assign) id<DMCPeerDelegate> delegate;
 @property (nonatomic, strong) dispatch_queue_t delegateQueue;
+
+//Socket输入输出流
 @property (nonatomic, strong) NSInputStream *inputStream;
 @property (nonatomic, strong) NSOutputStream *outputStream;
+
 @property (nonatomic, strong) NSMutableData *msgHeader, *msgPayload, *outputBuffer;
 @property (nonatomic, assign) BOOL sentVerack, gotVerack;
 @property (nonatomic, assign) BOOL sentGetaddr, sentFilter, sentGetdata, sentMempool, sentGetblocks;
@@ -48,6 +51,8 @@ typedef enum : uint32_t {
 @property (nonatomic, strong) NSData *lastBlockHash;
 @property (nonatomic, strong) NSMutableArray *pongHandlers;
 @property (nonatomic, strong) void (^mempoolCompletion)(BOOL);
+
+//使用一个runloop来处理每个节点的连接
 @property (nonatomic, strong) NSRunLoop *runLoop;
 
 @end
@@ -66,7 +71,7 @@ typedef enum : uint32_t {
     if (! (self = [super init])) return nil;
 
     _address = address;
-    _port = (port == 0) ? BITCOIN_STANDARD_PORT : port;
+    _port = (port == 0) ? DAEMSCOIN_STANDARD_PORT : port;
     return self;
 }
 
@@ -103,6 +108,10 @@ services:(uint64_t)services
     else return @(inet_ntop(AF_INET6, &_address, s, sizeof(s)));
 }
 
+
+/**
+ 建立对等连接
+ */
 - (void)connect
 {
     if (self.status != DMCPeerStatusDisconnected) return;
@@ -110,6 +119,7 @@ services:(uint64_t)services
     _pingTime = DBL_MAX;
     if (! self.reachability) self.reachability = [Reachability reachabilityForInternetConnection];
     
+    //检查网络是否开启
     if (self.reachability.currentReachabilityStatus == NotReachable) { // delay connect until network is reachable
         NSLog(@"%@:%u not reachable, waiting...", self.host, self.port);
         
@@ -131,6 +141,7 @@ services:(uint64_t)services
         return;
     }
     else if (self.reachabilityObserver) {
+        //重新注册监听
         [self.reachability stopNotifier];
         self.reachability = nil;
         [[NSNotificationCenter defaultCenter] removeObserver:self.reachabilityObserver];
@@ -150,30 +161,34 @@ services:(uint64_t)services
 
     NSString *label = [NSString stringWithFormat:@"peer.%@:%u", self.host, self.port];
 
-    // use a private serial queue for processing socket io
+    // 异步线程，处理socket的runloop运行
     dispatch_async(dispatch_queue_create(label.UTF8String, NULL), ^{
         CFReadStreamRef readStream = NULL;
         CFWriteStreamRef writeStream = NULL;
 
         NSLog(@"%@:%u connecting", self.host, self.port);
+        //建立socket连接
         CFStreamCreatePairWithSocketToHost(NULL, (__bridge CFStringRef)self.host, self.port, &readStream, &writeStream);
         self.inputStream = CFBridgingRelease(readStream);
         self.outputStream = CFBridgingRelease(writeStream);
+        
+        //把socket的输入输出流注册到runloop中，通过runloop的时钟监听
         self.inputStream.delegate = self.outputStream.delegate = self;
         self.runLoop = [NSRunLoop currentRunLoop];
         [self.inputStream scheduleInRunLoop:self.runLoop forMode:NSRunLoopCommonModes];
         [self.outputStream scheduleInRunLoop:self.runLoop forMode:NSRunLoopCommonModes];
         
-        // after the reachablity check, the radios should be warmed up and we can set a short socket connect timeout
+        // 发送一个超时执行命令，如果超时了，就执行断开节点，如果连接了，就取消这个命令执行
         [self performSelector:@selector(disconnectWithError:)
-         withObject:[NSError errorWithDomain:@"BreadWallet" code:BITCOIN_TIMEOUT_CODE
+         withObject:[NSError errorWithDomain:@"Daems" code:DAEMSCOIN_TIMEOUT_CODE
                      userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(@"connect timeout", nil)}]
          afterDelay:CONNECT_TIMEOUT];
         
-        [self.inputStream open];
-        [self.outputStream open];
-        [self sendVersionMessage];
-        [self.runLoop run]; // this doesn't return until the runloop is stopped
+        [self.inputStream open];        //打开socket输入
+        [self.outputStream open];       //打开socket输出
+        [self sendVersionMessage];      //向节点发送版本握手
+        [self.runLoop run];             //开启同步，如果不主动断开，runloop是死循环
+        //runLoop run后将不会执行下段代码
     });
 }
 
@@ -182,6 +197,12 @@ services:(uint64_t)services
     [self disconnectWithError:nil];
 }
 
+
+/**
+ 断开连接，清除对象
+
+ @param error ——
+ */
 - (void)disconnectWithError:(NSError *)error
 {
     [NSObject cancelPreviousPerformRequestsWithTarget:self]; // cancel connect timeout
@@ -223,17 +244,21 @@ services:(uint64_t)services
     va_list args;
 
     va_start(args, message);
-    [self disconnectWithError:[NSError errorWithDomain:@"BreadWallet" code:500
+    [self disconnectWithError:[NSError errorWithDomain:@"Daems" code:500
      userInfo:@{NSLocalizedDescriptionKey:[[NSString alloc] initWithFormat:message arguments:args]}]];
     va_end(args);
 }
 
+
+/**
+ 握手成功后，标记已连接
+ */
 - (void)didConnect
 {
     if (self.status != DMCPeerStatusConnecting || ! self.sentVerack || ! self.gotVerack) return;
 
     NSLog(@"%@:%u handshake completed", self.host, self.port);
-    [NSObject cancelPreviousPerformRequestsWithTarget:self]; // cancel pending handshake timeout
+    [NSObject cancelPreviousPerformRequestsWithTarget:self]; // 取消超时处理的延迟执行命令
     _status = DMCPeerStatusConnected;
 
     dispatch_async(self.delegateQueue, ^{
@@ -258,6 +283,7 @@ services:(uint64_t)services
     CFRunLoopPerformBlock([self.runLoop getCFRunLoop], kCFRunLoopCommonModes, ^{
         NSLog(@"%@:%u sending %@", self.host, self.port, type);
 
+        //把消息主题放在协议体中
         [self.outputBuffer appendMessage:message type:type];
         
         while (self.outputBuffer.length > 0 && self.outputStream.hasSpaceAvailable) {
@@ -281,7 +307,7 @@ services:(uint64_t)services
     [msg appendUInt64:self.services]; // services of remote peer
     [msg appendBytes:&_address length:sizeof(_address)]; // IPv6 address of remote peer
     [msg appendBytes:&port length:sizeof(port)]; // port of remote peer
-    [msg appendNetAddress:LOCAL_HOST port:BITCOIN_STANDARD_PORT services:ENABLED_SERVICES]; // net address of local peer
+    [msg appendNetAddress:LOCAL_HOST port:DAEMSCOIN_STANDARD_PORT services:ENABLED_SERVICES]; // net address of local peer
     self.localNonce = ((uint64_t)arc4random() << 32) | (uint64_t)arc4random(); // random nonce
     [msg appendUInt64:self.localNonce];
     [msg appendString:USER_AGENT]; // user agent
@@ -297,6 +323,8 @@ services:(uint64_t)services
     self.sentVerack = YES;
     [self didConnect];
 }
+
+
 
 - (void)sendFilterloadMessage:(NSData *)filter
 {
@@ -496,14 +524,17 @@ services:(uint64_t)services
 
 - (void)acceptMessage:(NSData *)message type:(NSString *)type
 {
-    /*
+    
     if (self.currentBlock && ! [MSG_TX isEqual:type]) { // if we receive a non-tx message, merkleblock is done
+        //当所有交易单接收完
+        /*
         UInt256 hash = self.currentBlock.blockHash;
         
         self.currentBlock = nil;
         self.currentBlockTxHashes = nil;
         [self error:@"incomplete merkleblock %@, expected %u more tx, got %@",
          uint256_obj(hash), (int)self.currentBlockTxHashes.count, type];
+         */
     }
     else if ([MSG_VERSION isEqual:type]) [self acceptVersionMessage:message];
     else if ([MSG_VERACK isEqual:type]) [self acceptVerackMessage:message];
@@ -520,7 +551,7 @@ services:(uint64_t)services
     else if ([MSG_REJECT isEqual:type]) [self acceptRejectMessage:message];
     else if ([MSG_FEEFILTER isEqual:type]) [self acceptFeeFilterMessage:message];
     else NSLog(@"%@:%u dropping %@, len:%u, not implemented", self.host, self.port, type, (int)message.length);
-     */
+    
 }
 
 - (void)acceptVersionMessage:(NSData *)message
@@ -1045,12 +1076,12 @@ services:(uint64_t)services
                                uint128_eq(_address, [(DMCPeer *)object address]))) ? YES : NO;
 }
 
-// MARK: - NSStreamDelegate
+// MARK: - NSStreamDelegate 实现方法
 
 - (void)stream:(NSStream *)aStream handleEvent:(NSStreamEvent)eventCode
 {
     switch (eventCode) {
-        case NSStreamEventOpenCompleted:
+        case NSStreamEventOpenCompleted:    //连接成功
             NSLog(@"%@:%u %@ stream connected in %fs", self.host, self.port,
                   (aStream == self.inputStream) ? @"input" : (aStream == self.outputStream ? @"output" : @"unknown"),
                   [NSDate timeIntervalSinceReferenceDate] - self.pingStartTime);
@@ -1059,104 +1090,135 @@ services:(uint64_t)services
                 self.pingStartTime = [NSDate timeIntervalSinceReferenceDate]; // don't count connect time in ping time
                 [NSObject cancelPreviousPerformRequestsWithTarget:self]; // cancel pending socket connect timeout
                 [self performSelector:@selector(disconnectWithError:)
-                 withObject:[NSError errorWithDomain:@"BreadWallet" code:BITCOIN_TIMEOUT_CODE
+                 withObject:[NSError errorWithDomain:@"Daems" code:DAEMSCOIN_TIMEOUT_CODE
                              userInfo:@{NSLocalizedDescriptionKey:NSLocalizedString(@"connect timeout", nil)}]
                              afterDelay:CONNECT_TIMEOUT];
             }
 
             // fall through to send any queued output
-        case NSStreamEventHasSpaceAvailable:
+        case NSStreamEventHasSpaceAvailable:    //有数据可输出
             if (aStream != self.outputStream) return;
         
             while (self.outputBuffer.length > 0 && self.outputStream.hasSpaceAvailable) {
+                
+                //把缓存输入到输出流
                 NSInteger l = [self.outputStream write:self.outputBuffer.bytes maxLength:self.outputBuffer.length];
                 
+                //删除已输出的字节，并重新计算字节空间
                 if (l > 0) [self.outputBuffer replaceBytesInRange:NSMakeRange(0, l) withBytes:NULL length:0];
             }
 
             break;
             
-        case NSStreamEventHasBytesAvailable:
+        case NSStreamEventHasBytesAvailable:    //有数据可输入
             if (aStream != self.inputStream) return;
 
+            //这里的消息解析过于臃肿，需要优化
             while (self.inputStream.hasBytesAvailable) {
                 @autoreleasepool {
+                    
                     NSData *message = nil;
                     NSString *type = nil;
+                    
+                    //开始时，self.msgHeader.length = 0， self.msgPayload = 0
+                    //headerLen偏移长度
                     NSInteger headerLen = self.msgHeader.length, payloadLen = self.msgPayload.length, l = 0;
                     uint32_t length = 0, checksum = 0;
                     
-                    if (headerLen < HEADER_LENGTH) { // read message header
-                        self.msgHeader.length = HEADER_LENGTH;
+                    /************** 【一】消息头处理 **************/
+                    
+                    if (headerLen < HEADER_LENGTH) { // 读取头部，协议中Message的头部不会超过24字节
+                        self.msgHeader.length = HEADER_LENGTH;  //把前24字节以0填充，增加部分以0填充
+                        //输入流中的写入数据到头部缓存，开始位以headerLen偏移
                         l = [self.inputStream read:(uint8_t *)self.msgHeader.mutableBytes + headerLen
                              maxLength:self.msgHeader.length - headerLen];
                         
-                        if (l < 0) {
+                        //l为实际读取的长度
+                        if (l < 0) {    //如果没有数据读取了，则处理下一个消息
                             NSLog(@"%@:%u error reading message", self.host, self.port);
                             goto reset;
                         }
                         
+                        //消息头长度与实际读取的长度累加
                         self.msgHeader.length = headerLen + l;
                         
-                        // consume one byte at a time, up to the magic number that starts a new message header
+                        //读取头4字节的内容，判断是否为聊天币网络识别，一条消息必须以这个内容作为头部开始
                         while (self.msgHeader.length >= sizeof(uint32_t) &&
-                               [self.msgHeader UInt32AtOffset:0] != BITCOIN_MAGIC_NUMBER) {
+                               [self.msgHeader UInt32AtOffset:0] != DAEMSCOIN_MAGIC_NUMBER) {
 #if DEBUG
+                            //d9 b4 be f9
                             printf("%c", *(const char *)self.msgHeader.bytes);
 #endif
+                            //如果不是，移除这些内容，直至找到头4字节能识别为聊天币网络位置
                             [self.msgHeader replaceBytesInRange:NSMakeRange(0, 1) withBytes:NULL length:0];
                         }
                         
+                        //头部长度未读取够，继续while读取
                         if (self.msgHeader.length < HEADER_LENGTH) continue; // wait for more stream input
                     }
                     
+                    //检查command是否用NULL填充结束，使用非NULL字符填充会被拒绝
                     if ([self.msgHeader UInt8AtOffset:15] != 0) { // verify msg type field is null terminated
                         [self error:@"malformed message header: %@", self.msgHeader];
                         goto reset;
                     }
                     
-                    type = @((const char *)self.msgHeader.bytes + 4);
-                    length = [self.msgHeader UInt32AtOffset:16];
-                    checksum = [self.msgHeader UInt32AtOffset:20];
+                    /*
+                    Message Header:
+                    F9 BE B4 D9                                     - magic ：main 网络
+                    61 64 64 72  00 00 00 00 00 00 00 00            - "addr"
+                    1F 00 00 00                                     - payload 长度31字节
+                    7F 85 39 C2                                     - payload 校验和
+                    */
                     
-                    if (length > MAX_MSG_LENGTH) { // check message length
+                    type = @((const char *)self.msgHeader.bytes + 4);   //类型
+                    length = [self.msgHeader UInt32AtOffset:16];        //长度
+                    checksum = [self.msgHeader UInt32AtOffset:20];      //校验
+                    
+                    /************** 【二】消息主体处理 **************/
+                    
+                    if (length > MAX_MSG_LENGTH) { // 检查消息长度是否超限制
                         [self error:@"error reading %@, message length %u is too long", type, length];
                         goto reset;
                     }
                     
                     if (payloadLen < length) { // read message payload
-                        self.msgPayload.length = length;
+                        self.msgPayload.length = length;        //设置payload长度，增加部分以0填充
+                        
+                        //从输入流写入数据到payload缓存
                         l = [self.inputStream read:(uint8_t *)self.msgPayload.mutableBytes + payloadLen
                              maxLength:self.msgPayload.length - payloadLen];
                         
-                        if (l < 0) {
+                        //self.msgPayload.length - payloadLen = 剩余需要写入的数量
+                        
+                        if (l < 0) {    //读取失败
                             NSLog(@"%@:%u error reading %@", self.host, self.port, type);
                             goto reset;
                         }
-                        
+                        //重新记录消息主体实际长度已写入
                         self.msgPayload.length = payloadLen + l;
-                        if (self.msgPayload.length < length) continue; // wait for more stream input
+                        if (self.msgPayload.length < length) continue; //长度未到尽头，继续写
                     }
                     
-                    if (CFSwapInt32LittleToHost(self.msgPayload.SHA256_2.u32[0]) != checksum) { // verify checksum
+                    if (CFSwapInt32LittleToHost(self.msgPayload.SHA256_2.u32[0]) != checksum) { // 检查payload的前4个字节：sha256(sha256(payload)) == checksum
                         [self error:@"error reading %@, invalid checksum %x, expected %x, payload length:%u, expected "
                          "length:%u, SHA256_2:%@", type, self.msgPayload.SHA256_2.u32[0], checksum,
                          (int)self.msgPayload.length, length, uint256_obj(self.msgPayload.SHA256_2)];
                         goto reset;
                     }
                     
-                    message = self.msgPayload;
-                    self.msgPayload = [NSMutableData data];
-                    [self acceptMessage:message type:type]; // process message
+                    message = self.msgPayload;      //取得消息主体
+                    self.msgPayload = [NSMutableData data];     //重置消息主体
+                    [self acceptMessage:message type:type]; // 处理消息业务
                     
-reset:              // reset for next message
+reset:              // 读取的消息有异常，把消息头和消息主体重置，继续读取符合协议处理的内容
                     self.msgHeader.length = self.msgPayload.length = 0;
                 }
             }
 
             break;
             
-        case NSStreamEventErrorOccurred:
+        case NSStreamEventErrorOccurred:    //出错
             NSLog(@"%@:%u error connecting, %@", self.host, self.port, aStream.streamError);
             [self disconnectWithError:aStream.streamError];
             break;
