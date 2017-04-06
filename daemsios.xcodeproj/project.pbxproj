@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		C511609A1E961E400054CDC4 /* MessageHandler.h in Headers */ = {isa = PBXBuildFile; fileRef = C51160981E961E400054CDC4 /* MessageHandler.h */; };
+		C511609B1E961E400054CDC4 /* MessageHandler.m in Sources */ = {isa = PBXBuildFile; fileRef = C51160991E961E400054CDC4 /* MessageHandler.m */; };
+		C51160A51E962BFD0054CDC4 /* DMCConstants.h in Headers */ = {isa = PBXBuildFile; fileRef = C51160A31E962BFD0054CDC4 /* DMCConstants.h */; };
+		C51160A61E962BFD0054CDC4 /* DMCConstants.m in Sources */ = {isa = PBXBuildFile; fileRef = C51160A41E962BFD0054CDC4 /* DMCConstants.m */; };
 		C52F03BA1E8FC73E007E636A /* daemsios.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C52F03B01E8FC73E007E636A /* daemsios.framework */; };
 		C52F03BF1E8FC73E007E636A /* daemsiosTests.m in Sources */ = {isa = PBXBuildFile; fileRef = C52F03BE1E8FC73E007E636A /* daemsiosTests.m */; };
 		C52F03C11E8FC73E007E636A /* daemsios.h in Headers */ = {isa = PBXBuildFile; fileRef = C52F03B31E8FC73E007E636A /* daemsios.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -262,6 +266,10 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		C51160981E961E400054CDC4 /* MessageHandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageHandler.h; sourceTree = "<group>"; };
+		C51160991E961E400054CDC4 /* MessageHandler.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageHandler.m; sourceTree = "<group>"; };
+		C51160A31E962BFD0054CDC4 /* DMCConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DMCConstants.h; path = constants/DMCConstants.h; sourceTree = "<group>"; };
+		C51160A41E962BFD0054CDC4 /* DMCConstants.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DMCConstants.m; path = constants/DMCConstants.m; sourceTree = "<group>"; };
 		C52F03B01E8FC73E007E636A /* daemsios.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = daemsios.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C52F03B31E8FC73E007E636A /* daemsios.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = daemsios.h; sourceTree = "<group>"; };
 		C52F03B41E8FC73E007E636A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -534,6 +542,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		C511609C1E9624EF0054CDC4 /* constants */ = {
+			isa = PBXGroup;
+			children = (
+				C51160A31E962BFD0054CDC4 /* DMCConstants.h */,
+				C51160A41E962BFD0054CDC4 /* DMCConstants.m */,
+			);
+			name = constants;
+			sourceTree = "<group>";
+		};
 		C52F03A61E8FC73E007E636A = {
 			isa = PBXGroup;
 			children = (
@@ -577,6 +594,7 @@
 		C52F03CA1E8FC790007E636A /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				C511609C1E9624EF0054CDC4 /* constants */,
 				C5AF34041E90F5DB005F3FC1 /* network */,
 				C53116161E90DE4700E7511F /* core */,
 			);
@@ -885,6 +903,8 @@
 				C5AF34061E90F5DB005F3FC1 /* DMCPeer.m */,
 				C5AF34071E90F5DB005F3FC1 /* Reachability.h */,
 				C5AF34081E90F5DB005F3FC1 /* Reachability.m */,
+				C51160981E961E400054CDC4 /* MessageHandler.h */,
+				C51160991E961E400054CDC4 /* MessageHandler.m */,
 				C585DF281E951EE800CE430D /* DMCMessageHandler.h */,
 				C585DF291E951EE800CE430D /* DMCMessageHandler.m */,
 			);
@@ -907,6 +927,7 @@
 				C53117291E90DE4700E7511F /* DMCTransaction.h in Headers */,
 				C53848611E8FE0C90056A33D /* bn.h in Headers */,
 				C53116C31E90DE4700E7511F /* DMCBlindSignature+Tests.h in Headers */,
+				C511609A1E961E400054CDC4 /* MessageHandler.h in Headers */,
 				C538486E1E8FE0C90056A33D /* dsa.h in Headers */,
 				C53116E51E90DE4700E7511F /* DMCErrors.h in Headers */,
 				C53848601E8FE0C90056A33D /* blowfish.h in Headers */,
@@ -1014,6 +1035,7 @@
 				C53116E91E90DE4700E7511F /* DMCFancyEncryptedMessage.h in Headers */,
 				C53117111E90DE4700E7511F /* DMCPriceSource.h in Headers */,
 				C53116EF1E90DE4700E7511F /* DMCKey.h in Headers */,
+				C51160A51E962BFD0054CDC4 /* DMCConstants.h in Headers */,
 				C53116B91E90DE4700E7511F /* DMCBase58.h in Headers */,
 				C53116C71E90DE4700E7511F /* DMCBlock.h in Headers */,
 				C53848801E8FE0C90056A33D /* mdc2.h in Headers */,
@@ -1110,6 +1132,7 @@
 				TargetAttributes = {
 					C52F03AF1E8FC73E007E636A = {
 						CreatedOnToolsVersion = 8.3;
+						LastSwiftMigration = 0830;
 						ProvisioningStyle = Automatic;
 					};
 					C52F03B81E8FC73E007E636A = {
@@ -1158,6 +1181,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				C51160A61E962BFD0054CDC4 /* DMCConstants.m in Sources */,
 				C53117201E90DE4700E7511F /* DMCScript.m in Sources */,
 				C585DF2B1E951EE800CE430D /* DMCMessageHandler.m in Sources */,
 				C53116EE1E90DE4700E7511F /* DMCKey+Tests.m in Sources */,
@@ -1176,6 +1200,7 @@
 				C531172A1E90DE4700E7511F /* DMCTransaction.m in Sources */,
 				C53116D41E90DE4700E7511F /* DMCCurrencyConverter.m in Sources */,
 				C53117281E90DE4700E7511F /* DMCTransaction+Tests.m in Sources */,
+				C511609B1E961E400054CDC4 /* MessageHandler.m in Sources */,
 				C53116E01E90DE4700E7511F /* DMCEncryptedBackup.m in Sources */,
 				C53116B21E90DE4700E7511F /* DMCAssetAddress.m in Sources */,
 				C53116CC1E90DE4700E7511F /* DMCBlockchainInfo.m in Sources */,
@@ -1363,6 +1388,7 @@
 		C52F03C51E8FC73E007E636A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -1380,12 +1406,16 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.daemsios.app.daemsios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
 		C52F03C61E8FC73E007E636A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
@@ -1403,6 +1433,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.daemsios.app.daemsios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};

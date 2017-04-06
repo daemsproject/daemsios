@@ -279,7 +279,8 @@ services:(uint64_t)services
     }
 
     if (! self.runLoop) return;
-
+    
+    //把写入到输出流过程放在到runloop周期中执行
     CFRunLoopPerformBlock([self.runLoop getCFRunLoop], kCFRunLoopCommonModes, ^{
         NSLog(@"%@:%u sending %@", self.host, self.port, type);
 
@@ -1117,6 +1118,8 @@ services:(uint64_t)services
             while (self.inputStream.hasBytesAvailable) {
                 @autoreleasepool {
                     
+                    //以下程序控制在对每一个消息包的处理
+                    
                     NSData *message = nil;
                     NSString *type = nil;
                     
@@ -1211,7 +1214,9 @@ services:(uint64_t)services
                     self.msgPayload = [NSMutableData data];     //重置消息主体
                     [self acceptMessage:message type:type]; // 处理消息业务
                     
-reset:              // 读取的消息有异常，把消息头和消息主体重置，继续读取符合协议处理的内容
+reset:
+                    // 完整消息提取成功后 或 数据解析异常
+                    //把消息头和消息主体重置，继续读取符合协议处理的内容
                     self.msgHeader.length = self.msgPayload.length = 0;
                 }
             }

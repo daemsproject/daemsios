@@ -7,7 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "MessageHandler.h"
 
-@interface DMCMessageHandler : NSObject
+/**
+ 聊天币消息处理器
+ */
+@interface DMCMessageHandler : MessageHandler
+
 
 @end

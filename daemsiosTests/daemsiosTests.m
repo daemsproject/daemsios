@@ -25,8 +25,15 @@
 }
 
 - (void)testExample {
-    // This is an example of a functional test case.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
+    for (int a = 0; a < 10; a++) {
+        NSLog(@" a = %d", a);
+        if (a == 5) {
+            goto reset;
+        }
+        NSLog(@" next a = %d", a);
+    reset:
+        NSLog(@"goto a = %d", a);
+    }
 }
 
 - (void)testPerformanceExample {
